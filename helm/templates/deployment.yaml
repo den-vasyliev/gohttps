@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ include "helm.fullname" . }}
+  name: {{ include "helm.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "helm.fullname" . }}
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: {{ include "helm.fullname" . }}
+    spec:
+      containers:
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        name: {{ include "helm.fullname" . }}
+        volumeMounts:
+        - name: tls
+          mountPath: "/tmp/tls"
+          readOnly: true
+        resources: {}
+      volumes:
+      - name: tls
+        secret:
+          secretName: {{ .Values.ingress.secret }}
+status: {}
