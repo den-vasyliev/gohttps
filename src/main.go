@@ -39,6 +39,23 @@ var (
         Name:      "maintenance_code",
         Help:      maintenanceCodeDesc,
     })
+
+	// Define a Prometheus counter to track the number of requests made to the service
+    requestCounter = prometheus.NewCounterVec(
+        prometheus.CounterOpts{
+            Name: "http_requests_total",
+            Help: "Total number of requests received",
+        },
+        []string{"method", "path", "status"},
+    )
+
+    // Define a Prometheus gauge to track the number of active connections to the websocket endpoint
+    activeConnectionsGauge = prometheus.NewGauge(
+        prometheus.GaugeOpts{
+            Name: "active_connections",
+            Help: "Number of active websocket connections",
+        },
+    )
 )
 
 //RespM message
@@ -60,14 +77,17 @@ func jsonResponse(resp interface{}) []byte {
     }
     return js
 }
+// Handler for /version endpoint
 
 func version(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("gohttps v1.0.0"))
 }
+// Handler for /healthz endpoint
 
 func healthz(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("ok"))
 }
+// Handler for default endpoint
 
 func handleDefault(w http.ResponseWriter, r *http.Request) {
     wss := r.Header.Get("Upgrade")
@@ -79,6 +99,11 @@ func handleDefault(w http.ResponseWriter, r *http.Request) {
             return
         }
         defer c.Close()
+
+		        // Increase the active connections gauge and register it with Prometheus
+				activeConnectionsGauge.Inc()
+				prometheus.Register(activeConnectionsGauge)
+				
         for {
             mt, message, err := c.ReadMessage()
             if err != nil {
