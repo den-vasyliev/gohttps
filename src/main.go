@@ -107,5 +107,5 @@ func main() {
     http.HandleFunc(defaultPath, handleDefault)
     http.Handle("/metrics", promhttp.Handler())
 
-    log.Fatal(http.ListenAndServeTLS(":8888", certFile, privateKey, nil))
+    log.Fatal(http.ListenAndServeTLS(defaultPort, certFile, privateKey, nil))
 }
