@@ -41,8 +41,8 @@ func main() {
 	// handle `/` route
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// should be moved to var from conf
-		respM := RespM{"WARN_UNAVAILABLE_MAINTENANCE", "Maintenance", "The service is currently under regular maintenance, please, try again later"}
-		//respD := RespD{"WARN_UNAVAILABLE_DEPLOYMENT", "Deployment", "The service is currently being redeployed and will become available shortly"}
+		//respM := RespM{"WARN_UNAVAILABLE_MAINTENANCE", "Maintenance", "The service is currently under regular maintenance, please, try again later"}
+		respM := RespD{"WARN_UNAVAILABLE_DEPLOYMENT", "Deployment", "The service is currently being redeployed and will become available shortly"}
 
 		js, err := json.Marshal(respM)
 		if err != nil {
