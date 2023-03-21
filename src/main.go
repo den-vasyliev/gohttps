@@ -65,7 +65,7 @@ func main() {
 					break
 				}
 				log.Printf("recv: %s %s", message)
-				//http.Error(w, "{'json-code':'json-payload'}", http.StatusServiceUnavailable)
+				http.Error(w, "{'json-code':'json-payload'}", http.StatusServiceUnavailable)
 				err = c.WriteMessage(mt, js)
 				c.Close()
 				if err != nil {
