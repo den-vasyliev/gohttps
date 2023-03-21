@@ -83,6 +83,6 @@ func main() {
 
 	// run server on port "9000"
 	// should be moved to var
-	log.Fatal(http.ListenAndServeTLS(":8888", "/tmp/tls/tls.crt", "/tmp/tls/tls.key", nil))
+	log.Fatal(http.ListenAndServeTLS(":9000", "/tmp/tls/tls.crt", "/tmp/tls/tls.key", nil))
 
 }
